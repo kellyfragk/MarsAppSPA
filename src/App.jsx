@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
-import ContentOld from "./ContentOld.jsx";
 import Content from "./Content.jsx";
 import nasa from "./assets/nasa.png";
 
@@ -19,11 +18,16 @@ const paragraph2Nasa =
   "        space science.";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(
+    JSON.parse(localStorage.getItem("counter")),
+  );
+
+  useEffect(() => {
+    localStorage.setItem("counter", JSON.stringify(count));
+  }, [count]);
 
   return (
     <>
-      {/*<ContentOld />*/}
       <Content
         title={titleNasa}
         paragraph1={paragraph1Nasa}
