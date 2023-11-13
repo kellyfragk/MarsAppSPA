@@ -4,6 +4,8 @@ import viteLogo from "/vite.svg";
 import "./App.css";
 import Content from "./Content.jsx";
 import nasa from "./assets/nasa.png";
+import Button from "./Button.jsx";
+import CountMessage from "./CountMessage.jsx";
 
 // Test data
 const titleNasa = "Nasa";
@@ -26,6 +28,10 @@ function App() {
     localStorage.setItem("counter", JSON.stringify(count));
   }, [count]);
 
+  const handlerCount = () => {
+    setCount((count) => count + 1);
+  };
+
   return (
     <>
       <Content
@@ -44,9 +50,13 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
+        {/*original code*/}
+        {/*<button onClick={() => setCount((count) => count + 1)}>*/}
+        {/*  count is {count}*/}
+        {/*</button>*/}
+
+        <Button handlerCount={handlerCount} />
+        <CountMessage count={count} />
         <p>
           Edit <code>src/App.jsx</code> and save to test HMR
         </p>
