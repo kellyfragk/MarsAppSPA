@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, createContext, useRef } from "react";
+import axios from "axios";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
@@ -6,9 +7,10 @@ import Content from "./Content.jsx";
 import nasa from "./assets/nasa.png";
 import Button from "./Button.jsx";
 import CountMessage from "./CountMessage.jsx";
+import Select from "react-select";
 
 // Test data
-const titleNasa = "Nasa";
+const titleNasa = "NASA";
 const paragraph1Nasa =
   "The National Aeronautics and Space Administration (NASA /ˈnæsə/) is an\n" +
   "        independent agency of the U.S. federal government responsible for the\n" +
@@ -19,10 +21,44 @@ const paragraph2Nasa =
   "        distinctly civilian orientation, emphasizing peaceful applications in\n" +
   "        space science.";
 
+export const CountContext = createContext();
 function App() {
   const [count, setCount] = useState(
     JSON.parse(localStorage.getItem("counter")),
   );
+  const [rovers, setRovers] = useState();
+  const [currentRover, setCurrentRover] = useState();
+  const [currentCamera, setCurrentCamera] = useState();
+
+  useEffect(() => {
+    axios.get("/rovers").then((response) => {
+      setRovers(response.data);
+    });
+  }, []);
+
+  const roversNames = [];
+
+  if (rovers) {
+    rovers.rovers.forEach((x) => {
+      roversNames.push({ value: x.name, label: x.name });
+    });
+  }
+
+  let camerasNames = [];
+
+  if (rovers) {
+    camerasNames = [];
+    const roverObject = rovers.rovers.find((rover) => {
+      return rover.name === currentRover;
+    });
+
+    // if roverObject is not undefined construct cameras array
+    if (roverObject !== undefined) {
+      roverObject.cameras.forEach((x) => {
+        camerasNames.push({ value: x.name, label: x.name });
+      });
+    }
+  }
 
   useEffect(() => {
     localStorage.setItem("counter", JSON.stringify(count));
@@ -40,6 +76,24 @@ function App() {
         paragraph2={paragraph2Nasa}
         image={nasa}
       />
+      <form onSubmit={searchPhotos}>
+        <Select
+          options={roversNames}
+          className="options"
+          onChange={(e) => {
+            setCurrentRover(e.value);
+          }}
+        />
+        <Select
+          options={camerasNames}
+          className="options"
+          onChange={(e) => {
+            setCurrentCamera(e.value);
+          }}
+        />
+
+        <button type="submit">Search</button>
+      </form>
       <div>
         <a href="https://vitejs.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
@@ -48,15 +102,14 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <h1>Vite + React</h1>
+      <h2>Vite + React</h2>
       <div className="card">
-        {/*original code*/}
-        {/*<button onClick={() => setCount((count) => count + 1)}>*/}
-        {/*  count is {count}*/}
-        {/*</button>*/}
+        <CountContext.Provider value={count}>
+          <CountMessage />
+        </CountContext.Provider>
 
         <Button handlerCount={handlerCount} />
-        <CountMessage count={count} />
+
         <p>
           Edit <code>src/App.jsx</code> and save to test HMR
         </p>

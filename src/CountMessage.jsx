@@ -1,10 +1,12 @@
 import Counter from "./Counter.jsx";
 
-const CountMessage = ({ count }) => {
+const CountMessage = () => {
   return (
     <>
-      <div>The current count is: </div>
-      <Counter count={count} />
+      <div>
+        <div>The current count is:</div>
+        <Counter></Counter>
+      </div>
     </>
   );
 };
