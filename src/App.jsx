@@ -29,6 +29,8 @@ function App() {
   const [rovers, setRovers] = useState();
   const [currentRover, setCurrentRover] = useState();
   const [currentCamera, setCurrentCamera] = useState();
+  const [photos, setPhotos] = useState();
+  const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
     axios.get("/rovers").then((response) => {
@@ -68,6 +70,23 @@ function App() {
     setCount((count) => count + 1);
   };
 
+  const retrievePhotos = (event) => {
+    event.preventDefault();
+    axios
+      .get(`/rovers/${currentRover}/photos/${currentCamera}`)
+      .then((response) => {
+        setPhotos(response.data);
+      });
+    setIsActive(true);
+  };
+
+  let photosResult = [];
+  if (photos) {
+    photosResult = photos.photos.slice(0, 5).map((x) => {
+      return <img src={x.img_src} key={x.id} className="photo" />;
+    });
+  }
+
   return (
     <>
       <Content
@@ -76,7 +95,7 @@ function App() {
         paragraph2={paragraph2Nasa}
         image={nasa}
       />
-      <form onSubmit={searchPhotos}>
+      <form onSubmit={retrievePhotos}>
         <Select
           options={roversNames}
           className="options"
@@ -91,9 +110,29 @@ function App() {
             setCurrentCamera(e.value);
           }}
         />
-
         <button type="submit">Search</button>
       </form>
+
+      {isActive && (
+        <div className="modal-container">
+          <div className="modal">
+            <div>
+              Displaying photos for rover {currentRover} and camera{" "}
+              {currentCamera}
+            </div>
+            <div>{photosResult}</div>
+            <button
+              style={{ margin: "1em" }}
+              onClick={() => {
+                setIsActive(false);
+              }}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
       <div>
         <a href="https://vitejs.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
