@@ -8,6 +8,8 @@ import nasa from "./assets/nasa.png";
 import Button from "./Button.jsx";
 import CountMessage from "./CountMessage.jsx";
 import Select from "react-select";
+import styled from "@emotion/styled";
+import StyledButton from "./StyledButton.jsx";
 
 // Test data
 const titleNasa = "NASA";
@@ -22,6 +24,12 @@ const paragraph2Nasa =
   "        space science.";
 
 export const CountContext = createContext();
+
+export const Heading = styled("h1")`
+  color: ${(props) => props.fg};
+  margin: 0 auto;
+`;
+
 function App() {
   const [count, setCount] = useState(
     JSON.parse(localStorage.getItem("counter")),
@@ -89,6 +97,7 @@ function App() {
 
   return (
     <>
+      <Heading fg="#de3163"> Welcome to..</Heading>
       <Content
         title={titleNasa}
         paragraph1={paragraph1Nasa}
@@ -110,7 +119,7 @@ function App() {
             setCurrentCamera(e.value);
           }}
         />
-        <button type="submit">Search</button>
+        <StyledButton type="submit">Search</StyledButton>
       </form>
 
       {isActive && (
@@ -122,7 +131,7 @@ function App() {
             </div>
             <div>{photosResult}</div>
             <button
-              style={{ margin: "1em" }}
+              style={{ margin: "0 auto 1em", width: "10em", flexBasis: "2em" }}
               onClick={() => {
                 setIsActive(false);
               }}

@@ -1,5 +1,6 @@
+import StyledButton from "./StyledButton.jsx";
 const Button = ({ handlerCount }) => {
-  return <button onClick={handlerCount}> Click me!</button>;
+  return <StyledButton onClick={handlerCount}> Click me!</StyledButton>;
 };
 
 export default Button;
