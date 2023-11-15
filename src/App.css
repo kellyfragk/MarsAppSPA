@@ -33,6 +33,8 @@ body {
   background-color: #deeabc;
   border-radius: 1.5rem;
   padding: 2em;
+  display: flex;
+  flex-direction: column;
 }
 
 .nasaLogo {
